@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Campus Customs: App Check</title>
+  <style>
+    body { margin: 0; font-family: "Segoe UI", Arial, sans-serif; color: #14213d; background: #f6f8fb; line-height: 1.6; }
+    header { background: #0b2545; color: #fff; padding: 2rem 1.5rem; box-shadow: inset 0 -3px 0 #e0457b; }
+    header h1 { margin: 0; font-family: Georgia, serif; }
+    header p { margin: 0.4rem 0 0; color: #dfe6f1; }
+    main { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+    section { background: #fff; border: 1px solid #e4e8ef; border-radius: 14px; padding: 1.5rem; margin: 1.5rem 0;
+              box-shadow: 0 0 0 1px rgba(224, 69, 123, .15), 0 10px 30px rgba(11, 37, 69, .08); }
+    h2 { font-family: Georgia, serif; margin-top: 0; color: #0b2545; }
+    .eyebrow { color: #b3165a; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; font-size: .75rem; margin: 0; }
+    figure { margin: 1rem 0 0; }
+    img { width: 100%; height: auto; border: 1px solid #e4e8ef; border-radius: 10px; }
+    figcaption { font-size: .9rem; color: #5b6678; margin-top: .5rem; }
+    table { border-collapse: collapse; margin: .75rem 0; font-size: .92rem; }
+    th, td { border: 1px solid #e4e8ef; padding: .35rem .7rem; text-align: left; }
+    th { background: #f6f8fb; }
+    code { background: #f6f8fb; padding: 0 .3rem; border-radius: 4px; }
+    .ok { color: #1b7f3b; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Campus Customs: App Check</h1>
+    <p>Screenshots from the running app (frontend <code>localhost:5173</code>, FastAPI <code>localhost:8000</code>,
+      real gpt-5.6-luna replies via Portkey), taken as a signed-out guest. No keys, passwords, emails or personal data are shown.</p>
+  </header>
+  <main>
+    <section id="test-1">
+      <p class="eyebrow">Test 1</p>
+      <h2>Database-grounded price and inventory in chat</h2>
+      <p>On the Davenport College Crewneck page the shopper asked: <em>"How much is this crewneck, and how many do you have in
+        medium and in small?"</em> The agent used the page context and the SQLite price and size-inventory tools. It answered
+        <strong>"$58.00. There are 5 in medium; small is currently sold out."</strong>, which matches the database exactly.</p>
+      <table>
+        <tr><th>Source</th><th>Price</th><th>Medium (M)</th><th>Small (S)</th></tr>
+        <tr><td><code>catalogue</code> / <code>inventory</code> tables (direct SQL)</td><td>$58.00</td><td>5</td><td>0 (sold out)</td></tr>
+        <tr><td>Chat reply in the screenshot</td><td>$58.00</td><td>5</td><td>sold out</td></tr>
+      </table>
+      <p class="ok">✓ Price and both inventory figures match the database.</p>
+      <figure>
+        <img src="app_check_images/1_price_inventory_chat.png" alt="Chat on the Davenport College Crewneck page replying that it costs $58.00, 5 are in stock in medium and small is sold out, with a product card" />
+        <figcaption>Figure 1. Live chat reply on the product page, with the database-built product card ($58.00).</figcaption>
+      </figure>
+    </section>
+
+    <section id="test-2">
+      <p class="eyebrow">Test 2</p>
+      <h2>Dynamic category product cards</h2>
+      <p>Tapping the suggestion <em>"What hoodies do you have?"</em> made the agent call <code>search_catalogue(category="hoodie")</code>.
+        FastAPI returned the reply plus product matches built from the database. The chat rendered <strong>12 clickable cards</strong>
+        (image, name, price, short description) and <strong>"Showing 12 of 27 · View all"</strong>. The database has exactly 27 hoodies.</p>
+      <p class="ok">✓ Cards are generated from database matches, and the count matches the catalogue (27).</p>
+      <figure>
+        <img src="app_check_images/2_dynamic_category_cards.png" alt="Chat reply 'We have 27 hoodies' with a scrolling list of hoodie product cards and the text Showing 12 of 27, View all" />
+        <figcaption>Figure 2. Live category answer with dynamic product cards; each card links to its product page.</figcaption>
+      </figure>
+    </section>
+
+    <section id="test-3">
+      <p class="eyebrow">Test 3 · Problem 9 usability feature</p>
+      <h2>Normalized catalogue search</h2>
+      <p>The storefront search box uses the normalized, deduplicated search engine. Typing <em>"1/4 zip"</em> finds
+        <strong>all 11 quarter-zips</strong>, even though the catalogue names them "… 1 4 Zip". Plain keyword matching would miss them.
+        The live result count reads "11 results for “1/4 zip”".</p>
+      <p class="ok">✓ 11 results, which equals the 11 quarter-zips in the catalogue, with no duplicates.</p>
+      <figure>
+        <img src="app_check_images/3_usability_normalized_search.png" alt="Products page with the search box containing 1/4 zip and the status line 11 results for 1/4 zip above a grid of quarter-zip pullovers" />
+        <figcaption>Figure 3. Search normalization in the storefront (Problem 9, improvement 3).</figcaption>
+      </figure>
+    </section>
+  </main>
+</body>
+</html>

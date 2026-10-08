@@ -1,0 +1,46 @@
+﻿# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Node / Vite
+node_modules/
+dist/
+*.local
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local backup of the earlier self-built database (contains password hashes)
+backend/data/backup/
+
+# Course data pack: install locally with backend/setup_data.py (never commit)
+backend/data/campus_customs.db
+backend/data/*.db
+backend/data/*.db-journal
+backend/data/images/products/
+/data/
+*.zip
+
+# Audit temp/backup files (the audit_trail.json itself is committed; it is sanitized)
+output/audit_trail.json.tmp
+output/audit_trail.corrupt-*.json
+
+# Test / tool caches
+.pytest_cache/
+backend/output/
